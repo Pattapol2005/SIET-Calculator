@@ -59,7 +59,7 @@ export default function GeminiRlcDirect() {
           disabled={loading}
           className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow disabled:opacity-50 transition"
         >
-          {loading ? "กำลังถาม..." : "ถาม Gemini"}
+          {loading ? "กำลังถาม..." : "ถาม Gemini Electro"}
         </button>
       </div>
 
