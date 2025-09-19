@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import {
   Field,
   Badge,
@@ -40,6 +40,11 @@ export default function PhasorCalculator() {
   const [cosStr, setCosStr] = useState("");
   const [sinStr, setSinStr] = useState("");
   const [tanStr, setTanStr] = useState("");
+
+  // ✅ ทำ props ที่ไม่ควรเปลี่ยนให้ "คงที่"
+  const ANGLE_UNITS = useMemo(() => [{ label: "°", factor: 1 }], []);
+  const DIMLESS_UNITS = useMemo(() => [{ label: "-", factor: 1 }], []);
+  const noop = useCallback(() => {}, []);
 
   // Parse V/I
   const V = toBase(
@@ -109,7 +114,7 @@ export default function PhasorCalculator() {
   }, [V, I, phiRad]);
 
   // Reset
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setVStr("");
     setIStr("");
     setVUnit("V");
@@ -119,14 +124,14 @@ export default function PhasorCalculator() {
     setCosStr("");
     setSinStr("");
     setTanStr("");
-  };
+  }, []);
 
-  // ✅ Waveform data
+  // Waveform data
   const waveData = useMemo(() => {
     if (phiRad == null) return [];
     const Vm = V ?? 1;
     const Im = I ?? 1;
-    const points = [];
+    const points: Array<{ angle: number; Voltage: number; Current: number }> = [];
     for (let deg = 0; deg <= 360; deg += 5) {
       const rad = (deg * Math.PI) / 180;
       const v = Vm * Math.sin(rad);
@@ -136,8 +141,7 @@ export default function PhasorCalculator() {
     return points;
   }, [V, I, phiRad]);
 
-  // Input field for phase
-  const PhaseField = () => {
+  const PhaseField = useMemo(() => {
     if (mode === "angle") {
       return (
         <Field
@@ -146,8 +150,8 @@ export default function PhasorCalculator() {
           value={phiStr}
           onChange={setPhiStr}
           unit="°"
-          onUnitChange={() => {}}
-          unitOptions={[{ label: "°", factor: 1 }]}
+          onUnitChange={noop}
+          unitOptions={ANGLE_UNITS}
           placeholder="เช่น 30"
         />
       );
@@ -160,8 +164,8 @@ export default function PhasorCalculator() {
           value={cosStr}
           onChange={setCosStr}
           unit=""
-          onUnitChange={() => {}}
-          unitOptions={[{ label: "-", factor: 1 }]}
+          onUnitChange={noop}
+          unitOptions={DIMLESS_UNITS}
           placeholder="ระบุ -1 ถึง 1"
         />
       );
@@ -174,8 +178,8 @@ export default function PhasorCalculator() {
           value={sinStr}
           onChange={setSinStr}
           unit=""
-          onUnitChange={() => {}}
-          unitOptions={[{ label: "-", factor: 1 }]}
+          onUnitChange={noop}
+          unitOptions={DIMLESS_UNITS}
           placeholder="ระบุ -1 ถึง 1"
         />
       );
@@ -187,12 +191,12 @@ export default function PhasorCalculator() {
         value={tanStr}
         onChange={setTanStr}
         unit=""
-        onUnitChange={() => {}}
-        unitOptions={[{ label: "-", factor: 1 }]}
+        onUnitChange={noop}
+        unitOptions={DIMLESS_UNITS}
         placeholder="เช่น 0.577 (≈ tan 30°)"
       />
     );
-  };
+  }, [mode, phiStr, cosStr, sinStr, tanStr, ANGLE_UNITS, DIMLESS_UNITS, noop]);
 
   return (
     <div className="space-y-6">
@@ -205,6 +209,7 @@ export default function PhasorCalculator() {
               : "bg-white dark:bg-gray-900"
           }`}
           onClick={() => setMode("angle")}
+          type="button"
         >
           φ°
         </button>
@@ -215,6 +220,7 @@ export default function PhasorCalculator() {
               : "bg-white dark:bg-gray-900"
           }`}
           onClick={() => setMode("cos")}
+          type="button"
         >
           cosφ
         </button>
@@ -225,6 +231,7 @@ export default function PhasorCalculator() {
               : "bg-white dark:bg-gray-900"
           }`}
           onClick={() => setMode("sin")}
+          type="button"
         >
           sinφ
         </button>
@@ -235,6 +242,7 @@ export default function PhasorCalculator() {
               : "bg-white dark:bg-gray-900"
           }`}
           onClick={() => setMode("tan")}
+          type="button"
         >
           tanφ
         </button>
@@ -262,7 +270,7 @@ export default function PhasorCalculator() {
           unitOptions={currentUnits}
           placeholder="เช่น 5"
         />
-        <PhaseField />
+        {PhaseField}
       </div>
 
       {phaseWarning && (

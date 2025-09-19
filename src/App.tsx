@@ -5,19 +5,20 @@ import ParallelRlc from "./modules/ParallelRlc";
 import AskGemini from "./modules/askGemini";
 import Resistor from "./modules/ResistorColorCode";
 import PhasorCalculator from "./modules/PhasorCalculator";
+import Digital from "./modules/bit";
 import logo from "./logo.png";
 import { TabButton } from "./components/ui";
 
 export default function App() {
   const [tab, setTab] = useState<
-    "ohm" | "rlc series" | "rlc parallel" | "resistor color" | "phasor Calculator" | "ask gemini"
+    "ohm" | "rlc series" | "rlc parallel" | "resistor color" | "phasor Calculator" | "ask gemini" | "bit"
   >("ohm");
 
   
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2500);
+    const timer = setTimeout(() => setLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -42,7 +43,7 @@ export default function App() {
         <header className="mb-6">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight">SIET Calculator</h1>
           <p className="mt-1 text-gray-600 dark:text-gray-300">
-            เครื่องมือช่วยคำนวณไฟฟ้าวงจร AC / DC / Gemini Electro <br />
+            เครื่องมือช่วยคำนวณวงจรไฟฟ้า / Gemini Electro <br />
             Facebook :{" "}
             <a
               href="https://www.facebook.com/profile.php?id=61580930048000"
@@ -73,12 +74,20 @@ export default function App() {
           </p>
         </header>
 
-        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
+        <div
+          className="
+            inline-flex flex-wrap items-center
+            gap-2
+            rounded-2xl border border-gray-200 dark:border-gray-700
+            shadow-sm p-1
+            w-fit
+          "
+        >
           <TabButton active={tab === "ohm"} onClick={() => setTab("ohm")}>
             Ohm Law
           </TabButton>
           <TabButton active={tab === "resistor color"} onClick={() => setTab("resistor color")}>
-            Resistor Code
+            Resistor
           </TabButton>
           <TabButton active={tab === "rlc series"} onClick={() => setTab("rlc series")}>
             RLC Series
@@ -87,7 +96,10 @@ export default function App() {
             RLC Parallel
           </TabButton>
           <TabButton active={tab === "phasor Calculator"} onClick={() => setTab("phasor Calculator")}>
-            Phasor Calculator
+            Phasor Cal
+          </TabButton>
+          <TabButton active={tab === "bit"} onClick={() => setTab("bit")}>
+            Digital
           </TabButton>
           <TabButton active={tab === "ask gemini"} onClick={() => setTab("ask gemini")}>
             Ask Gemini 🤖
@@ -100,6 +112,7 @@ export default function App() {
           {tab === "rlc parallel" && <ParallelRlc />}
           {tab === "resistor color" && <Resistor />}
           {tab === "phasor Calculator" && <PhasorCalculator />}
+          {tab === "bit" && <Digital />}
           {tab === "ask gemini" && <AskGemini />}
         </div>
       </div>
