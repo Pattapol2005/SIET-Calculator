@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/declarations.d.ts","./src/main.tsx","./src/components/ui.tsx","./src/lib/units.ts","./src/modules/ohmslaw.tsx","./src/modules/parallelrlc.tsx","./src/modules/phasorcalculator.tsx","./src/modules/resistorcolorcode.tsx","./src/modules/serieslrlc.tsx","./src/modules/askgemini.tsx"],"version":"5.9.2"}
