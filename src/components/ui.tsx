@@ -49,31 +49,50 @@ export function ResultsGrid({
 export function Button({
   onClick,
   children,
+  className,
+  title,
+  variant = "secondary", // รับได้ แต่ใช้แค่เลือกสไตล์
 }: {
   onClick?: () => void;
   children: React.ReactNode;
+  className?: string;
+  title?: string;
+  variant?: "secondary" | "ghost" | "default";
 }) {
+  const base =
+    "rounded-2xl px-5 py-3 border transition shadow-sm " +
+    "border-gray-200 dark:border-gray-700";
+  const styles =
+    variant === "ghost"
+      ? "bg-transparent hover:bg-gray-100/60 dark:hover:bg-gray-800/60"
+      : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700";
   return (
-    <button
-      onClick={onClick}
-      className="rounded-2xl px-5 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 transition shadow-sm"
-    >
+    <button onClick={onClick} title={title} className={`${base} ${styles} ${className ?? ""}`}>
       {children}
     </button>
   );
 }
 
+
 export function PrimaryButton({
   onClick,
   children,
+  className,
+  title,
 }: {
   onClick?: () => void;
   children: React.ReactNode;
+  className?: string;
+  title?: string;
 }) {
   return (
     <button
       onClick={onClick}
-      className="rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white transition shadow-sm"
+      title={title}
+      className={
+        "rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white transition shadow-sm " +
+        (className ?? "")
+      }
     >
       {children}
     </button>
@@ -144,12 +163,12 @@ export function Field({
           inputMode="decimal"
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
           className="flex-1 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-900/50 px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         <select
           value={unit}
-          onChange={(e) => onUnitChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onUnitChange(e.target.value)}
           className="w-20 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-900/50 px-2 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           {unitOptions.map((u) => (
